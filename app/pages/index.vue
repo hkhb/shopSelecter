@@ -21,7 +21,5 @@
 
 <script setup lang="ts">
 import { useMainComposition } from '../compositions/main.composition'
-// import { openModal } from 'jenesius-vue-modal';
 const { menus, handleClick } = useMainComposition()
-// const modal = await openModal(Modal, { message: 'モーダル表示' });
 </script>
