@@ -1,39 +1,44 @@
 <template>
   <div class="modal-overlay" @click="onClose">
     <div class="modal" @click.stop>
-      <p class="modal-message">{{ message }}</p>
-      <h1>sssss</h1>
+      <p class="modal-message" v-if="message">{{ message }}</p>
+        <component
+          v-if="component"
+          :is="component"
+          v-bind="payload"
+        />
       <button class="modal-close-button" @click="onClose">閉じる</button>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { closeModal } from 'jenesius-vue-modal';
-  const props = defineProps<{ message: string }>();
+import { closeModal } from 'jenesius-vue-modal'
 
-  const onClose = async () => {
-    // モーダルを閉じる
-    await closeModal();
-  }
+const props = defineProps<{
+  message?: string
+  component?: any
+  payload?: Record<string, any>
+}>()
+
+const onClose = async () => {
+  await closeModal()
+}
 </script>
 
 <style scoped>
-/* 背景の半透明オーバーレイ */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(219, 230, 96, 0.8); /* 半透明の黒 */
+  background-color: rgba(233, 237, 180, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
-
-/* モーダル本体 */
 .modal {
   background-color: white;
   padding: 20px;
@@ -43,15 +48,11 @@
   width: 90%;
   text-align: center;
 }
-
-/* メッセージのスタイル */
 .modal-message {
   margin-bottom: 20px;
   font-size: 16px;
   color: #333;
 }
-
-/* 閉じるボタン */
 .modal-close-button {
   background-color: #007bff;
   color: white;
@@ -61,7 +62,6 @@
   cursor: pointer;
   font-size: 14px;
 }
-
 .modal-close-button:hover {
   background-color: #0056b3;
 }

@@ -1,7 +1,9 @@
 <template>
   <div>
     <NuxtRouteAnnouncer />
-    <Main />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
     <WidgetContainerModal />
   </div>
 </template>
