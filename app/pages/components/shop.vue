@@ -4,16 +4,13 @@
       class="shop-card flex flex-col gap-2 rounded-xl border border-slate-100 
              bg-white shadow-sm px-5 py-4 
              hover:shadow-md hover:-translate-y-0.5 
-             transition-transform duration-150"
+             transition-transform duration-150
+             m-3"
     >
       <div v-if="data" class="flex flex-col gap-2">
-
-        <!-- 店名 -->
         <p class="text-lg font-semibold text-gray-800">
           {{ data.name }}
         </p>
-
-        <!-- カテゴリ -->
         <div class="flex flex-wrap items-center gap-2">
           <span
             class="inline-block rounded-full bg-orange-100 text-orange-700 
@@ -29,8 +26,6 @@
             {{ data.Subcatergory }}
           </span>
         </div>
-
-        <!-- 回数 -->
         <div class="mt-1 flex items-center justify-between">
           <span class="text-xs text-gray-500">
             行った回数

@@ -41,7 +41,9 @@ export function useMainComposition() {
       navigateTo(link)
       }
     else if('/setting' === link) {    
-      // navigateTo(link)
+      openModal(Modal, {
+        message: "準備中"
+      })
     }
   }
   return { menus, handleClick };
