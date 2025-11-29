@@ -1,26 +1,15 @@
+import { useShopStore } from '~/stores/list.store';
 import { openModal } from "jenesius-vue-modal";
 import Modal from '../pages/components/Modal.vue';
 import { ref, onBeforeMount } from "vue";
 import ShopForm from "~/pages/components/ShopForm.vue";
-
-export interface ShopData {
-  id: number;
-  name: string;
-  catergory: string;
-  Subcatergory: string;
-  count: number;
-}
+import type { ShopData } from "~/dts/shop.dts";
 
 export function useListComposition() {
-  const lists = ref<ShopData[]>([
-    { 
-      id: 1,
-      name: 'Sample Data',
-      catergory: 'restaurant',
-      Subcatergory: 'ra-men',
-      count: 1
-    }
-  ])
+
+  const shopStore = useShopStore();
+  callOnce(() => shopStore.fetchShops())
+  const lists = shopStore.items
 
   const handleClick = async (data?:ShopData) => {
     console.log("handleClick", data)

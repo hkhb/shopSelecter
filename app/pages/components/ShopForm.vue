@@ -110,11 +110,6 @@ const props = defineProps<{
   }
 }>()
 
-const emit = defineEmits<{
-  (e: 'submit', payload: ShopFormData): void
-  (e: 'cancel'): void
-}>()
-
 const form = reactive<ShopFormData>({
   id: props.data?.id,
   name: props.data?.name ?? '',
@@ -136,8 +131,13 @@ watch(
   { immediate: false }
 )
 
-const onSubmit = () => {
-  emit('submit', { ...form })
+const onSubmit = async () => {
+  try{
+
+  }catch(err){
+    console.error('Error submitting form:', err)
+  }
+  await closeModal()
 }
 
 const onCancel = async () => {
