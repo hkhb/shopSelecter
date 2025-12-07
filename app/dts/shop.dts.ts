@@ -1,5 +1,5 @@
 export interface ShopData {
-  id: number;
+  id?: number;
   name: string;
   catergory: string;
   Subcatergory: string;

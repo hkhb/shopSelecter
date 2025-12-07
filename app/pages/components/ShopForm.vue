@@ -6,7 +6,6 @@
              hover:shadow-md hover:-translate-y-0.5 
              transition-transform duration-150
              m-3"
-      @submit.prevent="onSubmit"
     >
 
       <h2 class="text-lg font-semibold text-gray-800">
@@ -77,9 +76,10 @@
           キャンセル
         </button>
         <button
-          type="submit"
+          type="button"
           class="rounded-md bg-sky-500 px-4 py-2 text-xs font-semibold text-white
                  hover:bg-sky-600 active:translate-y-[1px] transition"
+          @click="onSubmit"
         >
           保存する
         </button>
@@ -91,27 +91,18 @@
 <script lang="ts" setup>
 import { reactive, watch } from 'vue'
 import { closeModal } from 'jenesius-vue-modal'
+import { useShopStore } from '~/stores/list.store';
+import { type ShopData } from '../../dts/shop.dts'
+const shopStore = useShopStore();
 
-type ShopFormData = {
-  id?: number
-  name: string
-  catergory: string
-  Subcatergory: string
-  count: number
-}
 
 const props = defineProps<{
-  data?: {
-    id: number;
-    name: string;
-    catergory: string;
-    Subcatergory: string;
-    count: number;
-  }
+  data?: ShopData
 }>()
+const isCreateMode = !props.data?.id
 
-const form = reactive<ShopFormData>({
-  id: props.data?.id,
+const form = reactive<ShopData>({
+  id: props.data?.id ,
   name: props.data?.name ?? '',
   catergory: props.data?.catergory ?? '',
   Subcatergory: props.data?.Subcatergory ?? '',
@@ -131,16 +122,25 @@ watch(
   { immediate: false }
 )
 
-const onSubmit = async () => {
+const onSubmit = () => {
   try{
-
+    if(!form.name){
+      throw new Error('店名は必須です')
+    }
+    if(isCreateMode){
+      shopStore.createShop(form)
+    }else{
+      shopStore.updateShop(form)
+    }
+    console.log('Form submitted:', form)
   }catch(err){
     console.error('Error submitting form:', err)
   }
-  await closeModal()
+  closeModal()
 }
 
-const onCancel = async () => {
-  await closeModal()
+const onCancel = () => {
+  console.log('Form cancelled')
+  closeModal()
 }
 </script>

@@ -28,7 +28,7 @@
     <div class="max-w-5xl mx-auto">
       <div class="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         <div
-          v-for="item in lists"
+          v-for="item in items"
           :key="item.id"
           class="w-full"
           @click="handleClick(item)"
@@ -44,5 +44,5 @@
 import Shop from './components/Shop.vue'
 import { useListComposition } from '../compositions/list.composition'
 
-const { lists, handleClick } = useListComposition()
+const { items, handleClick } = useListComposition()
 </script>

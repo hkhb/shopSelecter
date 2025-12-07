@@ -1,16 +1,9 @@
 import { defineStore } from 'pinia'
-
-export type Shop = {
-  id: string
-  name: string
-  catergory: string
-  Subcatergory: string
-  count: number
-}
+import { type ShopData } from '../dts/shop.dts'
 
 export const useShopStore = defineStore('shop', {
   state: () => ({
-    items: [] as Shop[],
+    items: [] as ShopData[],
     loading: false as boolean,
     error: null as string | null,
   }),
@@ -24,10 +17,10 @@ export const useShopStore = defineStore('shop', {
         // this.items = res
 
         // ダミーデータ
-        const res: Shop[] = [
-          { id: '1', name: 'Shop A', catergory: 'restaurant', Subcatergory: 'ramen', count: 1 },
-          { id: '2', name: 'Shop B', catergory: 'cafe', Subcatergory: 'coffee', count: 2 },
-          { id: '3', name: 'Shop C', catergory: 'bar', Subcatergory: 'beer', count: 3 },
+        const res: ShopData[] = [
+          { id: 1, name: 'Shop A', catergory: 'restaurant', Subcatergory: 'ramen', count: 1 },
+          { id: 2, name: 'Shop B', catergory: 'cafe', Subcatergory: 'coffee', count: 2 },
+          { id: 3, name: 'Shop C', catergory: 'bar', Subcatergory: 'beer', count: 3 },
         ]
         this.items = res
       } catch (e: any) {
@@ -36,20 +29,59 @@ export const useShopStore = defineStore('shop', {
         this.loading = false
       }
     },
-    async updateShop(payload: Shop) {
+    async createShop(payload: ShopData) {
       this.loading = true
       this.error = null
       try {
-        const updated = await $fetch<Shop>(`/api/shops/${payload.id}`, {
-          method: 'PUT',
-          body: payload,
-        })
+        const newId =
+      this.items.length > 0
+        ? Math.max(...this.items.map((i) => i.id)) + 1
+        : 1
+        // const create = await $fetch<ShopData>(`/api/shops}`, {
+        //   method: 'POST',
+        //   body: payload,
+        // })
+        this.items.push(payload)
+        return payload
+      } catch (e: any) {
+        this.error = e?.message ?? 'Failed to update shop'
+        throw e
+      } finally {
+        this.loading = false
+      }
+    },
+    async updateShop(payload: ShopData) {
+      this.loading = true
+      this.error = null
+      try {
+        // const updated = await $fetch<Shop>(`/api/shops/${payload.id}`, {
+        //   method: 'PUT',
+        //   body: payload,
+        // })
+        const updated: ShopData = payload
         const idx = this.items.findIndex(i => i.id === updated.id)
         if (idx >= 0) this.items.splice(idx, 1, updated)
         else this.items.push(updated)
+      console.log('updated', updated)
         return updated
       } catch (e: any) {
         this.error = e?.message ?? 'Failed to update shop'
+        throw e
+      } finally {
+        this.loading = false
+      }
+    },
+    async deleteShop(id: number) {
+      this.loading = true
+      this.error = null
+      try {
+        // await $fetch(`/api/shops/${id}`, {
+        //   method: 'DELETE',
+        // })
+        const idx = this.items.findIndex(i => i.id === id)
+        if (idx >= 0) this.items.splice(idx, 1)
+      } catch (e: any) {
+        this.error = e?.message ?? 'Failed to delete shop'
         throw e
       } finally {
         this.loading = false

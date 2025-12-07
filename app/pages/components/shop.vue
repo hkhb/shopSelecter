@@ -49,15 +49,8 @@
 </template>
 
 <script lang="ts" setup>
+import { type ShopData } from '~/dts/shop.dts';
 const props = defineProps<{
-  data: {
-    id: number;
-    name: string;
-    catergory: string;
-    Subcatergory: string;
-    count: number;
-  }
+  data: ShopData | null
 }>()
-
-const data = props.data
 </script>
