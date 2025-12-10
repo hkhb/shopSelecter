@@ -24,7 +24,7 @@ export const useShopStore = defineStore('shop', {
         ]
         this.items = res
       } catch (e: any) {
-        this.error = e?.message ?? 'Failed to fetch shops (dummy)'
+        this.error = e?.message
       } finally {
         this.loading = false
       }
