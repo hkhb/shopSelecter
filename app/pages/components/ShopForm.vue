@@ -67,6 +67,14 @@
       </div>
 
       <div class="mt-2 flex justify-end gap-3">
+        <button v-if="!isCreateMode"
+          type="button"
+          class="rounded-md border border-slate-200 px-4 py-2 text-xs font-medium text-gray-600
+                 hover:bg-slate-50"
+          @click="onDelate"
+        >
+          削除
+        </button>
         <button
           type="button"
           class="rounded-md border border-slate-200 px-4 py-2 text-xs font-medium text-gray-600
@@ -121,6 +129,13 @@ watch(
   },
   { immediate: false }
 )
+const resetForm = () => {
+  form.id = undefined
+    form.name = ''
+    form.catergory = ''
+    form.Subcatergory = ''
+    form.count = undefined
+}
 
 const onSubmit = () => {
   try{
@@ -137,10 +152,18 @@ const onSubmit = () => {
     console.error('Error submitting form:', err)
   }
   closeModal()
+  resetForm
 }
 
 const onCancel = () => {
   console.log('Form cancelled')
   closeModal()
+  resetForm
+}
+
+const onDelate = () => {
+  shopStore.deleteShop(form.id)
+  closeModal()
+  resetForm
 }
 </script>
