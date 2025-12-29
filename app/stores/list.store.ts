@@ -12,16 +12,8 @@ export const useShopStore = defineStore('shop', {
       this.loading = true
       this.error = null
       try {
-        // 実APIは未実装のためコメントアウト
-        // const res = await $fetch<Shop[]>('/api/shops')
-        // this.items = res
-
-        // ダミーデータ
-        const res: ShopData[] = [
-          { id: 1, name: 'Shop A', catergory: 'restaurant', Subcatergory: 'ramen', count: 1 },
-          { id: 2, name: 'Shop B', catergory: 'cafe', Subcatergory: 'coffee', count: 2 },
-          { id: 3, name: 'Shop C', catergory: 'bar', Subcatergory: 'beer', count: 3 },
-        ]
+        const res = await $fetch<ShopData[]>('/api/shops')
+        this.items = res
         this.items = res
       } catch (e: any) {
         this.error = e?.message
@@ -37,10 +29,10 @@ export const useShopStore = defineStore('shop', {
       this.items.length > 0
         ? Math.max(...this.items.map((i) => i.id)) + 1
         : 1
-        // const create = await $fetch<ShopData>(`/api/shops}`, {
-        //   method: 'POST',
-        //   body: payload,
-        // })
+        const create = await $fetch<ShopData>(`/api/shops}`, {
+          method: 'POST',
+          body: payload,
+        })
         this.items.push(payload)
         return payload
       } catch (e: any) {
@@ -54,11 +46,10 @@ export const useShopStore = defineStore('shop', {
       this.loading = true
       this.error = null
       try {
-        // const updated = await $fetch<Shop>(`/api/shops/${payload.id}`, {
-        //   method: 'PUT',
-        //   body: payload,
-        // })
-        const updated: ShopData = payload
+        const updated = await $fetch<ShopData>(`/api/shops/${payload.id}`, {
+          method: 'PUT',
+          body: payload,
+        })
         const idx = this.items.findIndex(i => i.id === updated.id)
         if (idx >= 0) this.items.splice(idx, 1, updated)
         else this.items.push(updated)
@@ -75,9 +66,9 @@ export const useShopStore = defineStore('shop', {
       this.loading = true
       this.error = null
       try {
-        // await $fetch(`/api/shops/${id}`, {
-        //   method: 'DELETE',
-        // })
+        await $fetch(`/api/shops/${id}`, {
+          method: 'DELETE',
+        })
         const idx = this.items.findIndex(i => i.id === id)
         if (idx >= 0) this.items.splice(idx, 1)
       } catch (e: any) {

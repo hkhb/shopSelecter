@@ -2,6 +2,6 @@ export interface ShopData {
   id?: number;
   name: string;
   catergory: string;
-  Subcatergory: string;
+  subCatergory: string;
   count: number;
 }

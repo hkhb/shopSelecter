@@ -23,7 +23,7 @@
             class="inline-block rounded-full bg-teal-100 text-teal-700 
                    px-3 py-1 text-xs font-medium"
           >
-            {{ data.Subcatergory }}
+            {{ data.subCatergory }}
           </span>
         </div>
         <div class="mt-1 flex items-center justify-between">
