@@ -40,34 +40,37 @@
           カテゴリー <span class="text-red-500">*</span>
         </label>
         <input
-          v-model="form.catergory"
+          v-model="form.category"
           type="text"
           class="w-full rounded-md border px-3 py-2 text-sm
                  focus:outline-none focus:ring-2
                  "
-          :class="errors.catergory
+          :class="errors.category
             ? 'border-red-400 focus:ring-red-300 focus:border-red-300'
             : 'border-slate-200 focus:ring-orange-300 focus:border-orange-300'
           "
           placeholder="例：restaurant / cafe / bar"
         />
-        <p v-if="errors.catergory" class="mt-1 text-xs text-red-600">
-          {{ errors.catergory }}
+        <p v-if="errors.category" class="mt-1 text-xs text-red-600">
+          {{ errors.category }}
         </p>
       </div>
 
-      <!-- サブカテゴリ -->
+     <!-- サブカテゴリ -->
       <div class="flex flex-col gap-1">
         <label class="text-xs font-medium text-gray-600">
           サブカテゴリ
         </label>
         <input
-          v-model="form.subCatergory"
+          v-model="form.subCategory"
           type="text"
           class="w-full rounded-md border border-slate-200 px-3 py-2 text-sm
-                 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:border-teal-300"
+                focus:outline-none focus:ring-2 focus:ring-teal-300 focus:border-teal-300"
           placeholder="例：ra-men / izakaya など"
         />
+        <p v-if="errors.subCategory" class="mt-1 text-xs text-red-600">
+          {{ errors.subCategory }}
+        </p>
       </div>
 
       <!-- 行った回数 -->
@@ -137,15 +140,16 @@ const isCreateMode = computed(() => !props.data?.id)
 const form = reactive<ShopData>({
   id: props.data?.id,
   name: props.data?.name ?? '',
-  catergory: props.data?.catergory ?? '',
-  subCatergory: props.data?.subCatergory ?? '',
+  category: props.data?.category ?? '',
+  subCategory: props.data?.subCategory ?? '',
   count: props.data?.count ?? 0,
 })
 
 // バリデーションエラー用
 const errors = reactive<{
   name?: string
-  catergory?: string
+  category?: string
+  subCategory?: string
 }>({})
 
 // props 変更時にフォームを同期（編集時用）
@@ -155,8 +159,8 @@ watch(
     if (!val) return
     form.id = val.id
     form.name = val.name
-    form.catergory = val.catergory
-    form.subCatergory = val.subCatergory
+    form.category = val.category
+    form.subCategory = val.subCategory
     form.count = val.count
   },
   { immediate: false }
@@ -165,25 +169,36 @@ watch(
 const resetForm = () => {
   form.id = undefined
   form.name = ''
-  form.catergory = ''
-  form.subCatergory = ''
+  form.category = ''
+  form.subCategory = ''
   form.count = 0
   errors.name = undefined
-  errors.catergory = undefined
+  errors.category = undefined
+  errors.subCategory = undefined
 }
 
 const onSubmit = async () => {
   errors.name = undefined
-  errors.catergory = undefined
+  errors.category = undefined
+  errors.subCategory = undefined
 
   if (!form.name?.trim()) {
     errors.name = '店名は必須です'
   }
-  if (!form.catergory?.trim()) {
-    errors.catergory = 'カテゴリーは必須です'
+  if (!form.category?.trim()) {
+    errors.category = 'カテゴリーは必須です'
+  }
+  if (!isValidLambdaString(form.name)) {
+    errors.name = '店名に使用できない文字が含まれています'
+  }
+  if (!isValidLambdaString(form.category)) {
+    errors.category = 'カテゴリーに使用できない文字が含まれています'
+  }
+  if (!isValidLambdaString(form.subCategory)) {
+    errors.category = 'サブカテゴリーに使用できない文字が含まれています'
   }
 
-  if (errors.name || errors.catergory) {
+  if (errors.name || errors.category) {
     console.log('Validation error:', { ...errors })
     return
   }
@@ -200,6 +215,29 @@ const onSubmit = async () => {
   } catch (err) {
     console.error('Error submitting form:', err)
   }
+}
+
+//フォームのバリデーションチェック
+// Lambda の string でエラーになりそうな文字を弾く
+const isValidLambdaString = (value: string | undefined | null) => {
+  if (!value) return true
+
+  // 制御文字（NULL〜US）を禁止
+  if (/[\u0000-\u001F]/.test(value)) {
+    return false
+  }
+
+  // 絵文字などのピクトグラムを禁止（ES2020 以降）
+  if (/\p{Extended_Pictographic}/u.test(value)) {
+    return false
+  }
+
+  // 必要なら長さ制限などもここで
+  if (value.length > 100) {
+    return false
+  }
+
+  return true
 }
 
 const onCancel = () => {
