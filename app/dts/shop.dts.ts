@@ -1,5 +1,5 @@
 export interface ShopData {
-  id?: number;
+  id?: number | null;
   name: string;
   category: string;
   subCategory: string;

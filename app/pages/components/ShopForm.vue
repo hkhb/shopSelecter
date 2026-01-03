@@ -6,6 +6,7 @@
              hover:shadow-md hover:-translate-y-0.5 
              transition-transform duration-150
              m-3"
+      @submit.prevent="onSubmit"
     >
       <h2 class="text-lg font-semibold text-gray-800">
         お店情報フォーム
@@ -88,17 +89,11 @@
         />
       </div>
 
-      <div class="mt-2 flex justify-end gap-3">
-        <button
-          v-if="!isCreateMode"
-          type="button"
-          class="mt-4 px-4 py-2 rounded bg-gray-100 text-gray-700 text-xs font-semibold
-                 hover:bg-write-200 active:translate-y-[1px] transition"
-          @click="onDelete"
-        >
-          削除
-        </button>
+      <p v-if="ui.message" class="text-sm" :class="ui.type === 'success' ? 'text-green-600' : 'text-red-600'">
+        {{ ui.message }}
+      </p>
 
+      <div class="mt-2 flex justify-end gap-3">
         <button
           type="button"
           class="mt-4 px-4 py-2 rounded bg-gray-100 text-gray-700 text-xs font-semibold
@@ -122,137 +117,28 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, watch, computed } from 'vue'
+import { watch } from 'vue'
 import { closeModal } from 'jenesius-vue-modal'
-import { useShopStore } from '~/stores/list.store'
+import { useListComposition } from '@/compositions/list.composition'
 import type { ShopData } from '../../dts/shop.dts'
 
-const shopStore = useShopStore()
+const props = defineProps<{ data?: ShopData }>()
+const { form, errors, ui, setForm, submit } = useListComposition()
 
-const props = defineProps<{
-  data?: ShopData
-}>()
-
-// 作成モードか編集モードか（リアクティブに）
-const isCreateMode = computed(() => !props.data?.id)
-
-// フォーム本体
-const form = reactive<ShopData>({
-  id: props.data?.id,
-  name: props.data?.name ?? '',
-  category: props.data?.category ?? '',
-  subCategory: props.data?.subCategory ?? '',
-  count: props.data?.count ?? 0,
-})
-
-// バリデーションエラー用
-const errors = reactive<{
-  name?: string
-  category?: string
-  subCategory?: string
-}>({})
-
-// props 変更時にフォームを同期（編集時用）
 watch(
   () => props.data,
-  (val) => {
-    if (!val) return
-    form.id = val.id
-    form.name = val.name
-    form.category = val.category
-    form.subCategory = val.subCategory
-    form.count = val.count
-  },
-  { immediate: false }
+  (val) => setForm(val),
+  { immediate: true }
 )
 
-const resetForm = () => {
-  form.id = undefined
-  form.name = ''
-  form.category = ''
-  form.subCategory = ''
-  form.count = 0
-  errors.name = undefined
-  errors.category = undefined
-  errors.subCategory = undefined
-}
-
 const onSubmit = async () => {
-  errors.name = undefined
-  errors.category = undefined
-  errors.subCategory = undefined
-
-  if (!form.name?.trim()) {
-    errors.name = '店名は必須です'
-  }
-  if (!form.category?.trim()) {
-    errors.category = 'カテゴリーは必須です'
-  }
-  if (!isValidLambdaString(form.name)) {
-    errors.name = '店名に使用できない文字が含まれています'
-  }
-  if (!isValidLambdaString(form.category)) {
-    errors.category = 'カテゴリーに使用できない文字が含まれています'
-  }
-  if (!isValidLambdaString(form.subCategory)) {
-    errors.category = 'サブカテゴリーに使用できない文字が含まれています'
-  }
-
-  if (errors.name || errors.category) {
-    console.log('Validation error:', { ...errors })
-    return
-  }
-
-  try {
-    if (isCreateMode.value) {
-      await shopStore.createShop(form)
-    } else {
-      await shopStore.updateShop(form)
-    }
-    console.log('Form submitted:', form)
-    resetForm()
-    closeModal()
-  } catch (err) {
-    console.error('Error submitting form:', err)
+  const ok = await submit()
+  if (ok) {
+    await closeModal()
   }
 }
 
-//フォームのバリデーションチェック
-// Lambda の string でエラーになりそうな文字を弾く
-const isValidLambdaString = (value: string | undefined | null) => {
-  if (!value) return true
-
-  // 制御文字（NULL〜US）を禁止
-  if (/[\u0000-\u001F]/.test(value)) {
-    return false
-  }
-
-  // 絵文字などのピクトグラムを禁止（ES2020 以降）
-  if (/\p{Extended_Pictographic}/u.test(value)) {
-    return false
-  }
-
-  // 必要なら長さ制限などもここで
-  if (value.length > 100) {
-    return false
-  }
-
-  return true
-}
-
-const onCancel = () => {
-  console.log('Form cancelled')
-  resetForm()
-  closeModal()
-}
-
-const onDelete = async () => {
-  if (form.id == null) return
-  try {
-    await shopStore.deleteShop(form.id)
-  } finally {
-    resetForm()
-    closeModal()
-  }
+const onCancel = async () => {
+  await closeModal()
 }
 </script>

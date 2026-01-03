@@ -3,9 +3,10 @@
   // 3.nameがない場合は、店名は必須です表示
   // 4.categoryがない場合は、カテゴリは必須です表示
   // 5.nameとcategoryがない場合は、店名は必須です、カテゴリは必須です表示
-import { submitShopForm } from "./submitSopForm"; // ← 実際のパス・名前に変えて
+  import { useListComposition } from '@/compositions/list.composition'
+  const { form, errors, ui, setForm, submit } = useListComposition()
 
-describe("submitShopForm", () => {
+describe("submit", () => {
   let createShopMock: jest.Mock;
   let updateShopMock: jest.Mock;
   let setErrorMock: jest.Mock;
@@ -27,37 +28,48 @@ describe("submitShopForm", () => {
     const formValues = {
       id: 1,
       name: "月華",
-      catergory: 'レストラン',
-      subCatergory: '中華',
+      category: 'レストラン',
+      subCategory: '中華',
       count:  0,
     };
 
     // Act
-    await submitShopForm(formValues, {
+    await onSubmit(formValues, {
       isCreateMode: true,
       createShop: createShopMock,
       updateShop: updateShopMock,
       setError: setErrorMock,
     });
+
+    // Assert ← ここに expect を書く
+    expect(createShopMock).toHaveBeenCalled();
+    expect(updateShopMock).not.toHaveBeenCalled();
+    // 2. updateShopMock が 呼ばれていないこと
+    // 3. createShopMock に渡された引数が formValues を元にした期待値になっていること
   });
 
-  test("値が正常 & isCreateMode=true の場合は createShop を実行する", async () => {
+  test("値が正常 & isCreateMode=false の場合は updateShop を実行する", async () => {
     // Arrange
     const formValues = {
       id: 1,
       name: "月華",
-      catergory: 'レストラン',
-      subCatergory: '中華',
+      category: 'レストラン',
+      subCategory: '中華',
       count:  0,
     };
 
     // Act
-    await submitShopForm(formValues, {
+    await onSubmit(formValues, {
       isCreateMode: false,
       createShop: createShopMock,
       updateShop: updateShopMock,
       setError: setErrorMock,
     });
+
+    // Assert ← ここに expect を書く
+    // 1. createShopMock が 呼ばれていないこと
+    // 2. updateShopMock が 1回呼ばれていること
+    // 3. createShopMock に渡された引数が formValues を元にした期待値になっていること
   });
 
   test("name がない場合は『店名は必須です』を表示する", async () => {
@@ -65,18 +77,22 @@ describe("submitShopForm", () => {
     const formValues = {
       id: 1,
       name: "",
-      catergory: 'レストラン',
-      subCatergory: '中華',
+      category: 'レストラン',
+      subCategory: '中華',
       count:  0,
     };
 
     // Act
-    await submitShopForm(formValues, {
+    await onSubmit(formValues, {
       isCreateMode: true,
       createShop: createShopMock,
       updateShop: updateShopMock,
       setError: setErrorMock,
     });
+
+    // Assert ← ここに expect を書く
+    // 1. createShopMock が 呼ばれていないこと
+    // 2. updateShopMock が 呼ばれていないこと
   });
 
   test("category がない場合は『カテゴリは必須です』を表示する", async () => {
@@ -84,18 +100,22 @@ describe("submitShopForm", () => {
     const formValues = {
       id: 1,
       name: "月華",
-      catergory: '',
-      subCatergory: '中華',
+      category: '',
+      subCategory: '中華',
       count:  0,
     };
 
     // Act
-    await submitShopForm(formValues, {
+    await onSubmit(formValues, {
       isCreateMode: true,
       createShop: createShopMock,
       updateShop: updateShopMock,
       setError: setErrorMock,
     });
+
+    // Assert ← ここに expect を書く
+    // 1. createShopMock が 呼ばれていないこと
+    // 2. updateShopMock が 呼ばれていないこと
   });
 
   test("name と category がない場合は両方のエラーを表示する", async () => {
@@ -103,17 +123,21 @@ describe("submitShopForm", () => {
     const formValues = {
       id: 1,
       name: "",
-      catergory: '',
-      subCatergory: '中華',
+      category: '',
+      subCategory: '中華',
       count:  0,
     };
 
     // Act
-    await submitShopForm(formValues, {
+    await onSubmit(formValues, {
       isCreateMode: true,
       createShop: createShopMock,
       updateShop: updateShopMock,
       setError: setErrorMock,
     });
+
+    // Assert ← ここに expect を書く
+    // 1. createShopMock が 呼ばれていないこと
+    // 2. updateShopMock が 呼ばれていないこと
   });
 });
