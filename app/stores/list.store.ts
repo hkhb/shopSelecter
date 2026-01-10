@@ -34,13 +34,8 @@ export const useShopStore = defineStore('shop', {
       this.loading = true
       this.error = null
       try {
-        // ざっくりフロント側で連番を振る
-        const newId =
-          this.items.length > 0
-            ? Math.max(...this.items.map((i) => i.id)) + 1
-            : 1
 
-        const body: ShopData = { ...payload, id: newId }
+        const body: ShopData = { ...payload }
 
         const created = await $fetch<ShopData>('/api/lambda/shops', {
           method: 'POST',

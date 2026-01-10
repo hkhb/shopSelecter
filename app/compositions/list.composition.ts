@@ -4,6 +4,7 @@ import { openModal } from 'jenesius-vue-modal'
 import Modal from '../pages/components/Modal.vue'
 import ShopForm from '~/pages/components/ShopForm.vue'
 import type { ShopData } from '~/dts/shop.dts'
+import { validateShop, sanitizeShop } from '@/utils/validateShop'
 
 export function useListComposition() {
   const shopStore = useShopStore()
@@ -21,13 +22,7 @@ export function useListComposition() {
     type: '',
   })
 
-  const errors = reactive<{ name?: string; category?: string; subCategory?: string }>({})
-
-  const validate = () => {
-    errors.name = !form.name ? '店名は必須です' : undefined
-    errors.category = !form.category ? 'カテゴリーは必須です' : undefined
-    return !errors.name && !errors.category
-  }
+  const errors = reactive<{ name?: string; category?: string; subCategory?: string; count? :string}>({})
 
   const setForm = (data?: ShopData) => {
     form.id = data?.id ?? undefined
@@ -39,31 +34,39 @@ export function useListComposition() {
     ui.type = ''
     errors.name = undefined
     errors.category = undefined
+    errors.subCategory = undefined
+    errors.count = undefined
   }
 
-   const submit = async () => {
+  const submit = async () => {
     ui.message = ''
     ui.type = ''
-    if (!validate()) {
+
+    const { isValid, errors: validationErrors } = validateShop(form)
+    if (!isValid) {
       ui.message = '入力内容を確認してください'
       ui.type = 'error'
+      Object.assign(errors, validationErrors)
       return false
     }
+
+    const sanitizedForm = sanitizeShop(form)
+
     try {
-      if (!form.id) {
+      if (!sanitizedForm.id) {
         await shopStore.createShop({
-          name: form.name,
-          category: form.category,
-          subCategory: form.subCategory,
-          count: form.count,
+          name: sanitizedForm.name!,
+          category: sanitizedForm.category!,
+          subCategory: sanitizedForm.subCategory,
+          count: sanitizedForm.count,
         })
       } else {
         await shopStore.updateShop({
-          id: Number(form.id),
-          name: form.name,
-          category: form.category,
-          subCategory: form.subCategory,
-          count: form.count,
+          id: Number(sanitizedForm.id),
+          name: sanitizedForm.name!,
+          category: sanitizedForm.category!,
+          subCategory: sanitizedForm.subCategory,
+          count: sanitizedForm.count,
         } as ShopData)
       }
       ui.message = '保存しました'

@@ -83,10 +83,14 @@
           v-model.number="form.count"
           type="number"
           min="0"
+          max="999"
           class="w-full rounded-md border border-slate-200 px-3 py-2 text-sm
                  focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-yellow-300"
           placeholder="例：1"
         />
+        <p v-if="errors.count" class="mt-1 text-xs text-red-600">
+          {{ errors.count }}
+        </p>
       </div>
 
       <p v-if="ui.message" class="text-sm" :class="ui.type === 'success' ? 'text-green-600' : 'text-red-600'">

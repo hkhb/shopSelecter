@@ -1,20 +1,12 @@
+/** @type {import('jest').Config} */
 module.exports = {
-  testEnvironment: 'jsdom',
-  moduleFileExtensions: ['ts', 'js', 'vue', 'json'],
+  testEnvironment: "node",
+  testMatch: ["<rootDir>/tests/unit/**/*.spec.ts"],
   transform: {
-    '^.+\.ts$': 'ts-jest',
-    '^.+\.js$': 'babel-jest',
-    '^.+\.vue$': 'vue-jest',
+    "^.+\\.ts$": ["babel-jest", { configFile: "./babel.config.cjs" }],
   },
   moduleNameMapper: {
-    '^~/(.*)$': '<rootDir>/app/$1',
-    '^@/(.*)$': '<rootDir>/app/$1',
-    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+    "^~/(.*)$": "<rootDir>/app/$1",
+    "^@/(.*)$": "<rootDir>/app/$1",
   },
-  collectCoverage: true,
-  collectCoverageFrom: [
-    '<rootDir>/app/components/**/*.vue',
-    '<rootDir>/app/pages/**/*.vue',
-  ],
-  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(js|ts)$',
 };
