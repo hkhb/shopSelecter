@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts" setup>
-import Shop from './components/Shop.vue'
+import Shop from '~/components/Shop.vue'
 import { useListComposition } from '../compositions/list.composition'
 
 const { items, handleClick } = useListComposition()
