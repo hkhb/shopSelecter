@@ -11,11 +11,43 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      LAMBDA_URL: https://a6rabp4qomqwbmfdkd7y4yp4ce0fhhoa.lambda-url.us-east-1.on.aws/
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Show repo info
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Test (if exists)
+        run: npm run -s test --if-present
+
+      - name: Build (if exists)
+        run: npm run -s build --if-present
+
+      - name: Start app (if exists)
         run: |
-          node -v || true
-          npm -v || true
-          ls -la
+          npm run -s start --if-present &
+          echo $! > app.pid
+          sleep 2
+
+      - name: Healthcheck (local)
+        run: |
+          # 何番ポートで起動するか不明なので、一般的な3000で試す（必要なら変更）
+          curl -fsS --max-time 10 http://127.0.0.1:3000/ || true
+
+      - name: Smoke test (Lambda URL)
+        run: |
+          test -n "$LAMBDA_URL"
+          curl -fsS --max-time 20 "$LAMBDA_URL" | head -c 200 || true
+
+      - name: Stop app
+        if: always()
+        run: |
+          if [ -f app.pid ]; then kill "$(cat app.pid)" || true; fi
