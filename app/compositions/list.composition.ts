@@ -83,10 +83,6 @@ export function useListComposition() {
     shopStore.items.filter(item => item.id !== 0)
   )
 
-  onBeforeMount(() => {
-    shopStore.fetchShops()
-  })
-
   const handleClick = (data?: ShopData) => {
     const message = data ? '編集' : '新規作成'
     const component = ShopForm
