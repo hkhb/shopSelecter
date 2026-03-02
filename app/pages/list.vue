@@ -51,6 +51,6 @@ const shopStore = useShopStore()
 await useAsyncData('shops', () => shopStore.fetchShops())
 
 onUnmounted(() => {
-  shopStore.$reset() // もしくは shopStore.$reset()
+  shopStore.$reset()
 })
 </script>
