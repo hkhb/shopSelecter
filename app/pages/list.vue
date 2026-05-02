@@ -41,8 +41,16 @@
 </template>
 
 <script lang="ts" setup>
-import Shop from './components/Shop.vue'
+import Shop from '../components/shop.vue'
 import { useListComposition } from '../compositions/list.composition'
 
 const { items, handleClick } = useListComposition()
+
+const shopStore = useShopStore()
+
+await useAsyncData('shops', () => shopStore.fetchShops())
+
+onUnmounted(() => {
+  shopStore.$reset()
+})
 </script>

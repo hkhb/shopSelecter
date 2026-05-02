@@ -13,5 +13,14 @@ export default defineNuxtConfig({
       tailwindcss: {},
       autoprefixer: {}
     }
+  },
+
+  runtimeConfig: {
+    // サーバーのみ
+    apiSecret: process.env.API_SECRET,
+    lambdaBaseUrl: process.env.LAMBDA_URL,
+
+    public: {
+    }
   }
 })

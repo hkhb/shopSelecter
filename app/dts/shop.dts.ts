@@ -1,7 +1,7 @@
 export interface ShopData {
-  id?: number;
+  id?: number | null;
   name: string;
-  catergory: string;
-  Subcatergory: string;
+  category: string;
+  subCategory?: string;
   count: number;
 }
