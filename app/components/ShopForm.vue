@@ -122,27 +122,34 @@
 
 <script lang="ts" setup>
 import { watch } from 'vue'
-import { closeModal } from 'jenesius-vue-modal'
 import { useListComposition } from '@/compositions/list.composition'
 import type { ShopData } from '../../dts/shop.dts'
 
-const props = defineProps<{ data?: ShopData }>()
-const { form, errors, ui, setForm, submit } = useListComposition()
+const props = defineProps<{ modelValue?: ShopData }>()
+const emit = defineEmits<{
+  'update:modelValue': [value: ShopData]
+  'close': []
+  'submit': []
+}>()
+const { form, errors, ui, setForm } = useListComposition()
 
 watch(
-  () => props.data,
+  () => props.modelValue,
   (val) => setForm(val),
   { immediate: true }
 )
 
+watch(
+  form,
+  (val) => emit('update:modelValue', { ...val }),
+  { deep: true }
+)
+
 const onSubmit = async () => {
-  const ok = await submit()
-  if (ok) {
-    await closeModal()
-  }
+  emit('submit')
 }
 
-const onCancel = async () => {
-  await closeModal()
+const onCancel = () => {
+  emit('close')
 }
 </script>

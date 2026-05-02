@@ -1,6 +1,6 @@
 import { onBeforeMount, reactive, computed } from 'vue'
 import { useShopStore } from '~/stores/list.store'
-import { openModal } from 'jenesius-vue-modal'
+import { openModal, closeModal } from 'jenesius-vue-modal'
 import Modal from '../components/modal.vue'
 import ShopForm from '~/components/ShopForm.vue'
 import type { ShopData } from '~/dts/shop.dts'
@@ -71,6 +71,7 @@ export function useListComposition() {
       }
       ui.message = '保存しました'
       ui.type = 'success'
+      closeModal()
       return true
     } catch (e: any) {
       ui.message = e?.message ?? '保存に失敗しました'
@@ -90,9 +91,14 @@ export function useListComposition() {
     openModal(Modal, {
       message,
       component,
-      payload: { data },
+      payload: {
+        modelValue: data,
+        onClose: () => closeModal(),
+        onSubmit: () => submit(),
+      },
     })
   }
+  
 
   return { form, errors, ui, fetch: shopStore.fetchShops, setForm, submit, items, handleClick }
 }
