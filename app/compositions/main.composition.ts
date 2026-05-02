@@ -1,7 +1,7 @@
 // app/compositions/main.composition.ts
 import { openModal } from 'jenesius-vue-modal'
-import Modal from '../pages/components/Modal.vue'
-import Shop from '../pages/components/Shop.vue'
+import Modal from '../components/modal.vue'
+import Shop from '../components/shop.vue'
 import { useMainStore } from '~/stores/main.store'
 import type { ShopData } from '~/dts/shop.dts'
 

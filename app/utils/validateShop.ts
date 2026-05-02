@@ -7,6 +7,26 @@ export type ValidationErrors = {
   count?: string
 }
 
+// 1.店名 (name):
+//  必須チェック
+//  最大文字数チェック（50文字）
+//  許可されていない文字のチェック
+
+// 2.カテゴリー (category):
+//  必須チェック
+//  最大文字数チェック（30文字）
+//  許可されていない文字のチェック
+
+// 3.サブカテゴリー (subCategory):
+//  任意項目
+//  最大文字数チェック（30文字）
+//  許可されていない文字のチェック
+
+// 4.回数 (count):
+//  必須チェック
+//  整数チェック
+//  0以上999以下の範囲チェック
+
 const NAME_MAX_LENGTH = 50
 const CATEGORY_MAX_LENGTH = 30
 const ALLOWED_CHARACTERS =

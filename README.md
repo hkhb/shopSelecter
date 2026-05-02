@@ -1,75 +1,37 @@
-# Nuxt Minimal Starter
+Nuxt 3 + Tailwind CSS で構築された、お店選びを支援する Web アプリケーションです。
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+---
 
-## Setup
+## 🚀 機能
 
-Make sure to install dependencies:
+| メニュー     | 説明                                              |
+| ------------ | ------------------------------------------------- |
+| **ランダム** | 登録されたお店の中からランダムに 1 店を選出します |
+| **リスト**   | 登録されているお店の一覧を表示します              |
+| **一周**     | まだ行っていないお店を周回候補として提案します    |
+| **設定**     | （準備中）各種設定画面                            |
+
+---
+
+## 🛠️ 技術スタック
+
+- **フレームワーク**: [Nuxt 3](https://nuxt.com/)
+- **スタイリング**: [Tailwind CSS](https://tailwindcss.com/)
+- **状態管理**: Pinia（`useMainStore`）
+- **テスト**: Jest
+- **言語**: TypeScript
+
+---
+
+## 📦 セットアップ
+
+### 前提条件
+
+- Node.js >= 18
+- npm / yarn / pnpm
+
+### インストール
 
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

@@ -1,8 +1,8 @@
 import { onBeforeMount, reactive, computed } from 'vue'
 import { useShopStore } from '~/stores/list.store'
 import { openModal } from 'jenesius-vue-modal'
-import Modal from '../pages/components/Modal.vue'
-import ShopForm from '~/pages/components/ShopForm.vue'
+import Modal from '../components/modal.vue'
+import ShopForm from '~/components/ShopForm.vue'
 import type { ShopData } from '~/dts/shop.dts'
 import { validateShop, sanitizeShop } from '@/utils/validateShop'
 
